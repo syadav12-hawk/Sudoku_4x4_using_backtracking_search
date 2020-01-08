@@ -49,36 +49,52 @@ print(puz)
 
 def back_track(puz,prob,k):
 	global bt_flag
+	global que
+	global pre_prob
 	(i,j)=prob[k]
 	print(puz)
 	if bt_flag==1:
 		t=puz[i][j]
 		puz[i][j]=0
 		dom=dom_find(puz,i,j)
-		print(dom," ", k)
-		if len(dom)==1:
-			back_track(puz,prob,k-1)
-		else:
-			bt_flag=0
-			for m in dom:
-				if t==m:
-					continue
-				puz[i][j]=m
-				if k<len(prob)-1:
-					back_track(puz,prob,k+1)
-				return
-	else:
-		dom=dom_find(puz,i,j)
-		print(dom," ", k)
+		print(dom,"is the dom of ", k)
 		if len(dom)==0:
-			bt_flag=1
+			pre_prob[k]=[]
 			back_track(puz,prob,k-1)
 		else:
-			puz[i][j]=dom[0]
-			if k<len(prob)-1:
-				back_track(puz,prob,k+1)
-			else:
-				return
+			
+			count=0
+			mod_dom=[]
+			for f in pre_prob.keys():
+				if f==k:
+					print(pre_prob[f], ' ',f)
+					for w in dom:
+						flag4=0
+						for v in pre_prob[f]:
+							if v==w:
+								flag4=1
+								break
+						if flag4==1:
+							continue
+						else:
+							mod_dom.append(w)
+					print('Modified dom', mod_dom)
+					if len(mod_dom)==0:
+						bt_flag=1
+						puz[i][j]=0
+						pre_prob[k]=[]
+						back_track(puz,prob,k-1)
+					else:
+						bt_flag=0
+						for x in mod_dom:
+							puz[i][j]=x
+							pre_prob[k].append(x)
+							if k<len(prob)-1:
+								back_track(puz,prob,k+1)
+							return
+
+
+
 
 
 def sudoku_solver(puz):
