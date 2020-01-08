@@ -34,17 +34,8 @@ def dom_find(puz,i,j):
 	return f_dom;
 
 
-#Enter the Sudoku Table
-#print("Enter the sudoku table")
-#puz=[]
-#for i in [1,2,3,4]:
-#	row=[]
-#	for j in [1,2,3,4]:
-#		row.append(int(input()))
-#	puz.append(row)
 
-puz=[[0, 2, 1, 0], [3, 0, 0, 0], [0, 0, 0, 1], [0, 3, 4, 0]]
-print(puz)
+
 
 
 def back_track(puz,prob,k):
@@ -93,6 +84,36 @@ def back_track(puz,prob,k):
 								back_track(puz,prob,k+1)
 							return
 
+	else:
+		mod_dom1=[]
+		dom=dom_find(puz,i,j)
+		if len(dom)==0:
+			bt_flag=1
+			pre_prob[k]=[]
+			back_track(puz,prob,k-1)
+		else:
+			for f in pre_prob.keys():
+				if f==k:
+					for w in dom:
+						for v in pre_prob[f]:
+							if v==w:
+								break
+						mod_dom1.append(w)
+					
+			if len(mod_dom1)==0:
+				bt_flag=1
+				pre_prob[k]=[]		
+				back_track(puz,prob,k-1)
+			else:
+				for x in mod_dom1:
+					puz[i][j]=x
+					pre_prob[k].append(x)
+					if k<len(prob)-1:
+						back_track(puz,prob,k+1)
+					return	
+
+
+
 
 
 
@@ -111,8 +132,17 @@ def sudoku_solver(puz):
 
 
 
+#Enter the Sudoku Table
+#print("Enter the sudoku table")
+#puz=[]
+#for i in [1,2,3,4]:
+#	row=[]
+#	for j in [1,2,3,4]:
+#		row.append(int(input()))
+#	puz.append(row)
 
-
+puz=[[0, 2, 1, 0], [3, 0, 0, 0], [0, 0, 0, 1], [0, 3, 4, 0]]
+print(puz)
 sudoku_solver(puz)
 
 
